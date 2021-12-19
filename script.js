@@ -1,12 +1,18 @@
 'use strict';
 
 ///////////////////////////////////////
+// Add copy year dynamically
+
+const copyYear = document.querySelector('[data-year]');
+copyYear.textContent = new Date().getFullYear();
+
+///////////////////////////////////////
 // Modal window
 
-const modal = document.querySelector('.modal');
-const overlay = document.querySelector('.overlay');
-const btnCloseModal = document.querySelector('.btn--close-modal');
-const btnsOpenModal = document.querySelectorAll('.btn--show-modal');
+const modal = document.querySelector('[data-modal]');
+const overlay = document.querySelector('[data-overlay]');
+const btnCloseModal = document.querySelector('[data-modal-close]');
+const btnsOpenModal = document.querySelectorAll('[data-modal-open]');
 
 const openModal = function (e) {
   e.preventDefault();
