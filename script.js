@@ -12,14 +12,24 @@ copyYear.textContent = new Date().getFullYear();
 const header = document.querySelector('.header');
 const message = document.createElement('div');
 message.classList.add('cookie-message');
-message.innerHTML = 'We use cookies for improved functionality and analytics. <button class="btn" data-close-cookie>Got it!</button>';
+message.innerHTML =
+  'We use cookies for improved functionality and analytics. <button class="btn" data-close-cookie>Got it!</button>';
 header.before(message);
 
 const closeCookie = document.querySelector('[data-close-cookie]');
-closeCookie.addEventListener('click', function(){
+closeCookie.addEventListener('click', function () {
   message.remove();
 });
 
+///////////////////////////////////////
+// Scrolling to first section
+
+const btnScrollTo = document.querySelector('[data-scroll-to]');
+const section1 = document.querySelector('#section--1');
+
+btnScrollTo.addEventListener('click', function () {
+  section1.scrollIntoView({ behavior: 'smooth' });
+});
 ///////////////////////////////////////
 // Modal window
 
