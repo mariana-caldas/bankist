@@ -30,6 +30,22 @@ const section1 = document.querySelector('#section--1');
 btnScrollTo.addEventListener('click', function () {
   section1.scrollIntoView({ behavior: 'smooth' });
 });
+
+///////////////////////////////////////
+// Navigation 
+
+// Scrolling with event delegation
+const navLinksWrapper = document.querySelector('[data-nav-links]');
+
+navLinksWrapper.addEventListener('click', function(e){
+  e.preventDefault();
+  
+  if(e.target.hasAttribute('data-nav-link')){
+    const id = e.target.getAttribute('href');
+    document.querySelector(id).scrollIntoView({ behavior: 'smooth'});
+  }
+});
+
 ///////////////////////////////////////
 // Modal window
 
