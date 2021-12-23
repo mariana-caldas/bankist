@@ -47,6 +47,28 @@ navLinksWrapper.addEventListener('click', function(e){
 });
 
 ///////////////////////////////////////
+// Tabbed component
+
+const tabTrigger = document.querySelectorAll('[data-tab]');
+const tabContainer = document.querySelector('[data-tab-container]');
+const tabContent = document.querySelectorAll('[data-tab-content]');
+
+tabContainer.addEventListener('click', function(e){
+  const clickedBtn = e.target.closest('[data-tab]');
+
+  //Guard clause
+  if(!clickedBtn) return;
+
+  //Activate tab
+  tabTrigger.forEach(tab => tab.classList.remove('operations__tab--active'));
+  clickedBtn.classList.add('operations__tab--active');
+
+  //Activate content area
+  tabContent.forEach(tab => tab.classList.remove('operations__content--active'));
+  document.querySelector(`.operations__content--${clickedBtn.dataset.tab}`).classList.add('operations__content--active');
+});
+
+///////////////////////////////////////
 // Modal window
 
 const modal = document.querySelector('[data-modal]');
