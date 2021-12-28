@@ -10,11 +10,12 @@ copyYear.textContent = new Date().getFullYear();
 // Cookie Message
 
 const header = document.querySelector('.header');
+const footer = document.querySelector('.footer');
 const message = document.createElement('div');
 message.classList.add('cookie-message');
 message.innerHTML =
   'We use cookies for improved functionality and analytics. <button class="btn" data-close-cookie>Got it!</button>';
-header.before(message);
+footer.after(message);
 
 const closeCookie = document.querySelector('[data-close-cookie]');
 closeCookie.addEventListener('click', function () {
@@ -65,6 +66,18 @@ const handleHover = function (e) {
 //Setting "this" manually through "bind" to pass the opacity as an "argument" into the handler function
 nav.addEventListener('mouseover', handleHover.bind(0.5));
 nav.addEventListener('mouseout', handleHover.bind(1));
+
+//Sticky Navigation
+const section1Coord = section1.getBoundingClientRect();
+console.log("Corrdinates section 1", section1Coord);
+
+window.addEventListener('scroll', function(){
+ if (window.scrollY > section1Coord.top) {
+   nav.classList.add('sticky');
+ } else {
+   nav.classList.remove('sticky');
+ }
+});
 
 ///////////////////////////////////////
 // Tabbed component
