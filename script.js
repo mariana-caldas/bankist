@@ -9,7 +9,6 @@ copyYear.textContent = new Date().getFullYear();
 ///////////////////////////////////////
 // Cookie Message
 
-const header = document.querySelector('.header');
 const footer = document.querySelector('.footer');
 const message = document.createElement('div');
 message.classList.add('cookie-message');
@@ -67,17 +66,33 @@ const handleHover = function (e) {
 nav.addEventListener('mouseover', handleHover.bind(0.5));
 nav.addEventListener('mouseout', handleHover.bind(1));
 
-//Sticky Navigation
-const section1Coord = section1.getBoundingClientRect();
-console.log("Corrdinates section 1", section1Coord);
+//Sticky Navigation with Intersection Observer API
 
-window.addEventListener('scroll', function(){
- if (window.scrollY > section1Coord.top) {
-   nav.classList.add('sticky');
- } else {
-   nav.classList.remove('sticky');
- }
-});
+/* The header element is being observed by the API since it becomes its "target" and as soon as it is no longer visible 
+  on the viewport (root: 0, threshold: 0), which means not being intersectioned anymore, the sticky class is added to it */
+
+const header = document.querySelector('.header');
+const navHeight = nav.getBoundingClientRect().height;
+
+const stickyNavCallback = function(entries){
+  /* Entries represents the threshold options.
+    Since there is only one option this time, the entry is just destructured from entries
+  */
+  const [entry] = entries;
+  if(!entry.isIntersecting){
+    nav.classList.add('sticky');
+  }else{
+    nav.classList.remove('sticky');
+  }
+}
+
+const stickyOptions = {
+  root: null, //by using null, the viewport is defined as the root
+  threshold: 0, //by using 0, the threshold is defined as soon as the header element is no longer visible
+  rootMargin: `-${navHeight}px` //that makes the sticky navigation appears before the section starts to prevent content overlapping
+}
+const headerObserver = new IntersectionObserver(stickyNavCallback, stickyOptions);
+headerObserver.observe(header);
 
 ///////////////////////////////////////
 // Tabbed component
