@@ -95,6 +95,27 @@ const headerObserver = new IntersectionObserver(stickyNavCallback, stickyOptions
 headerObserver.observe(header);
 
 ///////////////////////////////////////
+// Reveal sections with Intersection Observer API
+const allSections = document.querySelectorAll('section');
+
+const revealSection = function (entries, observer){
+ const [entry] = entries //get the threshold option
+ if (!entry.isIntersecting) return;
+ entry.target.classList.remove('section--hidden');
+ observer.unobserve(entry.target);
+}
+
+const sectionObserver = new IntersectionObserver(revealSection, {
+  root: null, //consider viewport as the root
+  threshold: 0.15 // the section will be revealed when it is 15% visible
+});
+
+allSections.forEach( function(section){
+  sectionObserver.observe(section);
+  section.classList.add('section--hidden');
+})
+
+///////////////////////////////////////
 // Tabbed component
 
 const tabTrigger = document.querySelectorAll('[data-tab]');
