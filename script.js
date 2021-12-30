@@ -32,17 +32,17 @@ btnScrollTo.addEventListener('click', function () {
 });
 
 ///////////////////////////////////////
-// Navigation 
+// Navigation
 
 // Scrolling with event delegation
 const navLinksWrapper = document.querySelector('[data-nav-links]');
 
-navLinksWrapper.addEventListener('click', function(e){
+navLinksWrapper.addEventListener('click', function (e) {
   e.preventDefault();
-  
-  if(e.target.hasAttribute('data-nav-link')){
+
+  if (e.target.hasAttribute('data-nav-link')) {
     const id = e.target.getAttribute('href');
-    document.querySelector(id).scrollIntoView({ behavior: 'smooth'});
+    document.querySelector(id).scrollIntoView({ behavior: 'smooth' });
   }
 });
 
@@ -50,18 +50,18 @@ navLinksWrapper.addEventListener('click', function(e){
 const nav = document.querySelector('.nav');
 
 const handleHover = function (e) {
-  if(e.target.classList.contains('nav__link')){
+  if (e.target.classList.contains('nav__link')) {
     const link = e.target;
     const siblings = link.closest('.nav').querySelectorAll('.nav__link');
     const logo = link.closest('.nav').querySelector('img');
-    
+
     siblings.forEach(el => {
-     if (el !== link ) el.style.opacity = this;
+      if (el !== link) el.style.opacity = this;
     });
 
     logo.style.opacity = this;
   }
-}
+};
 //Setting "this" manually through "bind" to pass the opacity as an "argument" into the handler function
 nav.addEventListener('mouseover', handleHover.bind(0.5));
 nav.addEventListener('mouseout', handleHover.bind(1));
@@ -74,76 +74,79 @@ nav.addEventListener('mouseout', handleHover.bind(1));
 const header = document.querySelector('.header');
 const navHeight = nav.getBoundingClientRect().height;
 
-const stickyNavCallback = function(entries){
+const stickyNavCallback = function (entries) {
   /* Entries represents the threshold options.
     Since there is only one option this time, the entry is just destructured from entries
   */
   const [entry] = entries;
-  if(!entry.isIntersecting){
+  if (!entry.isIntersecting) {
     nav.classList.add('sticky');
-  }else{
+  } else {
     nav.classList.remove('sticky');
   }
-}
+};
 
 const stickyOptions = {
   root: null, //by using null, the viewport is defined as the root
   threshold: 0, //by using 0, the threshold is defined as soon as the header element is no longer visible
-  rootMargin: `-${navHeight}px` //that makes the sticky navigation appears before the section starts to prevent content overlapping
-}
-const headerObserver = new IntersectionObserver(stickyNavCallback, stickyOptions);
+  rootMargin: `-${navHeight}px`, //that makes the sticky navigation appears before the section starts to prevent content overlapping
+};
+const headerObserver = new IntersectionObserver(
+  stickyNavCallback,
+  stickyOptions
+);
 headerObserver.observe(header);
 
 ///////////////////////////////////////
 // Reveal sections with Intersection Observer API
 const allSections = document.querySelectorAll('section');
 
-const revealSection = function (entries, observer){
- const [entry] = entries //get the threshold option
- if (!entry.isIntersecting) return;
- entry.target.classList.remove('section--hidden');
- observer.unobserve(entry.target);
-}
+const revealSection = function (entries, observer) {
+  const [entry] = entries; //get the threshold option
+  if (!entry.isIntersecting) return;
+  entry.target.classList.remove('section--hidden');
+  observer.unobserve(entry.target);
+};
 
 const sectionObserver = new IntersectionObserver(revealSection, {
   root: null, //consider viewport as the root
-  threshold: 0.15 // the section will be revealed when it is 15% visible
+  threshold: 0.15, // the section will be revealed when it is 15% visible
 });
 
-allSections.forEach( function(section){
+allSections.forEach(function (section) {
   sectionObserver.observe(section);
   section.classList.add('section--hidden');
-})
+});
 
 ///////////////////////////////////////
 // Lazy loading images with Intersection Observer API
 
 const imgTargets = document.querySelectorAll('img[data-src]');
 
-const loadImg = function(entries, observer){
- const [entry] = entries;
+const loadImg = function (entries, observer) {
+  const [entry] = entries;
 
- if (!entry.isIntersecting) return;
+  if (!entry.isIntersecting) return;
 
- //Replace src with data-src
- entry.target.src = entry.target.dataset.src;
+  //Replace src with data-src
+  entry.target.src = entry.target.dataset.src;
 
- entry.target.addEventListener('load', function() {
-  entry.target.classList.remove('lazy-img');
- });
+  entry.target.addEventListener('load', function () {
+    entry.target.classList.remove('lazy-img');
+  });
 
- observer.unobserve(entry.target);
-}
+  observer.unobserve(entry.target);
+};
 
 const imgObserver = new IntersectionObserver(loadImg, {
   root: null,
   threshold: 0,
-  rootMargin: '-200px' //Make images load before the thresold is reached
-})
+  rootMargin: '-200px', //Make images load before the thresold is reached
+});
 
 imgTargets.forEach(img => {
   imgObserver.observe(img);
-})
+});
 
 ///////////////////////////////////////
 // Tabbed component
@@ -152,19 +155,23 @@ const tabTrigger = document.querySelectorAll('[data-tab]');
 const tabContainer = document.querySelector('[data-tab-container]');
 const tabContent = document.querySelectorAll('[data-tab-content]');
 
-tabContainer.addEventListener('click', function(e){
+tabContainer.addEventListener('click', function (e) {
   const clickedBtn = e.target.closest('[data-tab]');
 
   //Guard clause
-  if(!clickedBtn) return;
+  if (!clickedBtn) return;
 
   //Activate tab
   tabTrigger.forEach(tab => tab.classList.remove('operations__tab--active'));
   clickedBtn.classList.add('operations__tab--active');
 
   //Activate content area
-  tabContent.forEach(tab => tab.classList.remove('operations__content--active'));
-  document.querySelector(`.operations__content--${clickedBtn.dataset.tab}`).classList.add('operations__content--active');
+  tabContent.forEach(tab =>
+    tab.classList.remove('operations__content--active')
+  );
+  document
+    .querySelector(`.operations__content--${clickedBtn.dataset.tab}`)
+    .classList.add('operations__content--active');
 });
 
 ///////////////////////////////////////
