@@ -175,6 +175,48 @@ tabContainer.addEventListener('click', function (e) {
 });
 
 ///////////////////////////////////////
+// Slider
+
+const slides = document.querySelectorAll('.slide');
+
+let currentSlide = 0;
+const maxSlide = slides.length;
+const btnLeft = document.querySelector('[data-slider-left]');
+const btnRight = document.querySelector('[data-slider-right');
+
+const goToSlide = function (slide) {
+  slides.forEach((s, i) => {
+    s.style.transform = `translateX(${100 * (i - slide)}%)`;
+  });
+};
+
+//Initiate on slide 0
+goToSlide(0);
+
+//Next slide
+const nextSlide = function () {
+  if (currentSlide === maxSlide - 1) {
+    currentSlide = 0;
+  } else {
+    currentSlide++;
+  }
+  goToSlide(currentSlide);
+};
+
+// Previous slide
+const prevSlide = function () {
+  if (currentSlide === 0) {
+    currentSlide = maxSlide - 1;
+  } else {
+    currentSlide--;
+  }
+  goToSlide(currentSlide);
+};
+
+btnRight.addEventListener('click', nextSlide);
+btnLeft.addEventListener('click', prevSlide);
+
+///////////////////////////////////////
 // Modal window
 
 const modal = document.querySelector('[data-modal]');
