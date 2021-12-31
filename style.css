@@ -31,13 +31,13 @@ body {
   color: #444;
   line-height: 1.9;
   background-color: #f3f3f3;
+  overflow-x: hidden;
 }
 
 /* GENERAL ELEMENTS */
 .section {
-  padding: 15rem 3rem;
+  padding: 8rem 3rem;
   border-top: 1px solid #ddd;
-
   transition: transform 1s, opacity 1s;
 }
 
@@ -181,14 +181,12 @@ img {
 
 .header__title {
   flex: 1;
-
   max-width: 115rem;
   display: grid;
-  grid-template-columns: 3fr 2fr;
+  grid-template-columns: 1fr;
   row-gap: 3rem;
   align-content: center;
   justify-content: center;
-
   align-items: start;
   justify-items: start;
 }
@@ -233,7 +231,6 @@ h4 {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 4rem;
-  margin: 0 12rem;
 }
 
 .features__img {
@@ -408,9 +405,8 @@ h4 {
   position: absolute;
   top: 50%;
   z-index: 10;
-
   border: none;
-  background: rgba(255, 255, 255, 0.7);
+  background-color: rgba(255, 255, 255, 0.7);
   font-family: inherit;
   color: #333;
   border-radius: 50%;
@@ -418,6 +414,10 @@ h4 {
   width: 5.5rem;
   font-size: 3.25rem;
   cursor: pointer;
+}
+
+.slider__btn.disabled {
+  display: none;
 }
 
 .slider__btn--left {
@@ -465,17 +465,17 @@ h4 {
 
 /* TESTIMONIALS */
 .testimonial {
-  width: 65%;
   position: relative;
+  width: 95%;
 }
 
 .testimonial::before {
   content: '\201C';
   position: absolute;
-  top: -5.7rem;
-  left: -6.8rem;
+  top: -4.5rem;
+  left: -0.8rem;
   line-height: 1;
-  font-size: 20rem;
+  font-size: 10rem;
   font-family: inherit;
   color: var(--color-primary);
   z-index: -1;
@@ -672,4 +672,63 @@ h4 {
   font-size: 1.5rem;
   font-weight: 400;
   padding: 1rem;
+}
+
+/* MEDIA QUERIES */
+@media screen and (min-width: 768px) {
+  .section {
+    padding: 15rem 3rem;
+  }
+
+  .features {
+    margin: 0 12rem;
+  }
+
+  .testimonial {
+    width: 65%;
+  }
+
+  .testimonial::before {
+    left: -6.8rem;
+    top: -5.7rem;
+    font-size: 20rem;
+  }
+
+  .header__title {
+    grid-template-columns: 3fr 2fr;
+  }
+}
+
+@media screen and (max-width: 767px) {
+  h1 {
+    font-size: 4.5rem;
+  }
+
+  .nav {
+    flex-wrap: wrap;
+  }
+
+  .header__img {
+    display: none;
+  }
+
+  .footer__nav {
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+  }
+
+  .footer__item {
+    margin-right: 2rem;
+  }
+
+  .section__header {
+    font-size: 3rem;
+  }
+}
+
+@media screen and (max-width: 500px) {
+  .slider,
+  .slide {
+    height: 85rem;
+  }
 }
