@@ -72,7 +72,7 @@ body {
   font-family: inherit;
   font-weight: 500;
   border: none;
-  padding: 1.25rem 4.5rem;
+  padding: 1rem 3rem;
   border-radius: 10rem;
   cursor: pointer;
   transition: all 0.3s;
@@ -385,7 +385,6 @@ h4 {
   top: 0;
   width: 100%;
   height: 50rem;
-
   display: flex;
   align-items: center;
   justify-content: center;
@@ -432,7 +431,7 @@ h4 {
 
 .dots {
   position: absolute;
-  bottom: 5%;
+  bottom: 1%;
   left: 50%;
   transform: translateX(-50%);
   display: flex;
@@ -442,10 +441,10 @@ h4 {
   border: none;
   background-color: #b9b9b9;
   opacity: 0.7;
-  height: 1rem;
-  width: 1rem;
+  height: 1.2rem;
+  width: 1.2rem;
   border-radius: 50%;
-  margin-right: 1.75rem;
+  margin-right: 2rem;
   cursor: pointer;
   transition: all 0.5s;
 
@@ -671,11 +670,15 @@ h4 {
   color: #bbb;
   font-size: 1.5rem;
   font-weight: 400;
-  padding: 1rem;
+  padding: 2rem;
 }
 
 /* MEDIA QUERIES */
 @media screen and (min-width: 768px) {
+  .btn {
+    padding: 1.25rem 4.5rem;
+  }
+
   .section {
     padding: 15rem 3rem;
   }
@@ -696,6 +699,14 @@ h4 {
 
   .header__title {
     grid-template-columns: 3fr 2fr;
+  }
+
+  .cookie-message {
+    padding: 1rem;
+  }
+
+  .dots {
+    display: none;
   }
 }
 
@@ -724,11 +735,19 @@ h4 {
   .section__header {
     font-size: 3rem;
   }
+
+  .operations__tab-container {
+    flex-wrap: wrap;
+  }
+
+  .slider__btn {
+    display: none;
+  }
 }
 
 @media screen and (max-width: 500px) {
   .slider,
   .slide {
-    height: 85rem;
+    height: 75rem;
   }
 }

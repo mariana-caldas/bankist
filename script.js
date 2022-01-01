@@ -176,64 +176,102 @@ tabContainer.addEventListener('click', function (e) {
 
 ///////////////////////////////////////
 // Slider
+const slider = function () {
+  const slides = document.querySelectorAll('.slide');
+  let currentSlide = 0;
+  const maxSlide = slides.length;
+  const btnLeft = document.querySelector('[data-slider-left]');
+  const btnRight = document.querySelector('[data-slider-right]');
+  const dotContainer = document.querySelector('[data-dots-container]');
 
-const slides = document.querySelectorAll('.slide');
+  const createDots = function () {
+    slides.forEach((_, i) => {
+      const btnDot = `<button class="dots__dot" data-slide="${i}"></button>`;
+      dotContainer.insertAdjacentHTML('beforeend', btnDot);
+    });
+  };
 
-let currentSlide = 0;
-const maxSlide = slides.length;
-const btnLeft = document.querySelector('[data-slider-left]');
-const btnRight = document.querySelector('[data-slider-right]');
+  const activeDot = function (slide) {
+    //Remove all active dot styling first
+    document
+      .querySelectorAll('.dots__dot')
+      .forEach(dot => dot.classList.remove('dots__dot--active'));
 
-const goToSlide = function (slide) {
-  slides.forEach((s, i) => {
-    s.style.transform = `translateX(${100 * (i - slide)}%)`;
+    document
+      .querySelector(`.dots__dot[data-slide="${slide}"]`)
+      .classList.add('dots__dot--active');
+  };
 
-    if (slide === maxSlide - 1){
+  dotContainer.addEventListener('click', function (e) {
+    if (e.target.classList.contains('dots__dot')) {
+      const slide = e.target.dataset.slide;
+      goToSlide(slide);
+      activeDot(slide);
+    }
+  });
+
+  const goToSlide = function (slide) {
+    slides.forEach((s, i) => {
+      s.style.transform = `translateX(${100 * (i - slide)}%)`;
+
+      if (slide === maxSlide - 1) {
+        btnRight.classList.add('disabled');
+      }
+
+      if (slide === 0) {
+        btnLeft.classList.add('disabled');
+      }
+    });
+  };
+
+  //Next slide
+  const nextSlide = function () {
+    if (currentSlide === maxSlide - 1) {
       btnRight.classList.add('disabled');
+      btnLeft.classList.remove('disabled');
+    } else {
+      btnRight.classList.remove('disabled');
+      btnLeft.classList.remove('disabled');
+      currentSlide++;
     }
+    goToSlide(currentSlide);
+    activeDot(currentSlide);
+  };
 
-    if (slide === 0){
+  // Previous slide
+  const prevSlide = function () {
+    if (currentSlide === 0) {
       btnLeft.classList.add('disabled');
+      btnRight.classList.remove('disabled');
+    } else {
+      btnLeft.classList.remove('disabled');
+      btnRight.classList.remove('disabled');
+      currentSlide--;
     }
+    goToSlide(currentSlide);
+    activeDot(currentSlide);
+  };
+
+  //Initiate always on slide 0
+  const initSlider = function () {
+    goToSlide(0);
+    createDots();
+    activeDot(0);
+  };
+
+  initSlider();
+
+  //Event handlers
+  btnRight.addEventListener('click', nextSlide);
+  btnLeft.addEventListener('click', prevSlide);
+
+  document.addEventListener('keydown', function (e) {
+    e.key === 'ArrowLeft' && prevSlide();
+    e.key === 'ArrowRight' && nextSlide();
   });
 };
 
-//Next slide
-const nextSlide = function () {
-  if (currentSlide === maxSlide - 1) {
-    btnRight.classList.add('disabled');
-    btnLeft.classList.remove('disabled');
-  } else {
-    btnRight.classList.remove('disabled');
-    btnLeft.classList.remove('disabled');
-    currentSlide++;
-  }
-  goToSlide(currentSlide);
-};
-
-// Previous slide
-const prevSlide = function () {
-  if (currentSlide === 0) {
-    btnLeft.classList.add('disabled');
-    btnRight.classList.remove('disabled');
-  } else {
-    btnLeft.classList.remove('disabled');
-    btnRight.classList.remove('disabled');
-    currentSlide--;
-  }
-  goToSlide(currentSlide);
-};
-
-//Initiate always on slide 0
-goToSlide(0);
-
-btnRight.addEventListener('click', nextSlide);
-btnLeft.addEventListener('click', prevSlide);
-
-document.addEventListener('keydown', function(e){
-  e.key === 'ArrowLeft' && prevSlide();
-  e.key === 'ArrowRight' && nextSlide();
-});
+slider();
 
 ///////////////////////////////////////
 // Modal window
