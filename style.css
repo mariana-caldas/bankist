@@ -593,10 +593,11 @@ h4 {
   transform: translate(-50%, -50%);
   max-width: 60rem;
   background-color: #f3f3f3;
-  padding: 5rem 6rem;
+  padding: 4rem 3rem;
   box-shadow: 0 4rem 6rem rgba(0, 0, 0, 0.3);
   z-index: 1000;
   transition: all 0.5s;
+  width: 90%;
 }
 
 .overlay {
@@ -618,11 +619,9 @@ h4 {
 }
 
 .modal__form {
-  margin: 0 3rem;
-  display: grid;
-  grid-template-columns: 1fr 2fr;
+  display: flex;
   align-items: center;
-  gap: 2.5rem;
+  flex-wrap: wrap;
 }
 
 .modal__form label {
@@ -635,6 +634,7 @@ h4 {
   padding: 1rem 1.5rem;
   border: 1px solid #ddd;
   border-radius: 0.5rem;
+  width: 100%
 }
 
 .modal__form button {
@@ -674,6 +674,21 @@ h4 {
 }
 
 /* MEDIA QUERIES */
+@media screen and (min-width: 1024px) {
+  .modal {
+    width: auto;
+    max-width: 60rem;
+    padding: 5rem 6rem;
+  }
+
+  .modal__form {
+    margin: 0 3rem;
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 2.5rem;
+  }
+}
+
 @media screen and (min-width: 768px) {
   .btn {
     padding: 1.25rem 4.5rem;
@@ -742,6 +757,10 @@ h4 {
 
   .slider__btn {
     display: none;
+  }
+
+  .modal__header {
+    font-size: 2.7rem;
   }
 }
 
