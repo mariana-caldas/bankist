@@ -690,10 +690,6 @@ h4 {
 }
 
 @media screen and (min-width: 768px) {
-  .btn {
-    padding: 1.25rem 4.5rem;
-  }
-
   .section {
     padding: 15rem 3rem;
   }
@@ -755,6 +751,31 @@ h4 {
     flex-wrap: wrap;
   }
 
+  .operations__tab {
+    margin-right: 0;
+    width: 80%;
+    margin: 0.25rem 0;
+  }
+
+  .operations__tab--active {
+    transform: translateY(-50%) scale(1.1);
+    margin: 1rem 0;
+  }
+
+  .operations__content {
+    padding: 3rem;
+  }
+
+  .operations__header {
+    font-size: 2rem;
+  }
+
+  .operations__content--active {
+    display:flex;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
   .slider__btn {
     display: none;
   }
@@ -768,5 +789,9 @@ h4 {
   .slider,
   .slide {
     height: 75rem;
+  }
+
+  .btn.operations__tab {
+    padding: 1rem 2rem;
   }
 }
