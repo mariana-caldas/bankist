@@ -70,7 +70,7 @@ nav.addEventListener('mouseout', handleHover.bind(1));
 
 /* The header element is being observed by the API since it becomes its "target" and as soon as it is no longer visible 
   on the viewport (root: 0, threshold: 0), which means not being intersectioned anymore, the sticky class is added to it */
-
+  
 const header = document.querySelector('.header');
 const navHeight = nav.getBoundingClientRect().height;
 
@@ -86,10 +86,12 @@ const stickyNavCallback = function (entries) {
   }
 };
 
+const windowWidth = window.innerWidth;
+
 const stickyOptions = {
   root: null, //by using null, the viewport is defined as the root
   threshold: 0, //by using 0, the threshold is defined as soon as the header element is no longer visible
-  rootMargin: `-${navHeight}px`, //that makes the sticky navigation appears before the section starts to prevent content overlapping
+  rootMargin: windowWidth > 768 ? `-${navHeight}px`: '300px', //that makes the sticky navigation appears before the section starts to prevent content overlapping
 };
 const headerObserver = new IntersectionObserver(
   stickyNavCallback,
