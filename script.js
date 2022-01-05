@@ -22,6 +22,19 @@ closeCookie.addEventListener('click', function () {
 });
 
 ///////////////////////////////////////
+// Mobile Menu
+
+const hamburger = document.querySelector('[data-nav-hamburguer]');
+const navLinksWrapper = document.querySelector('[data-nav-links]');
+
+hamburger.addEventListener("click", mobileMenu);
+
+function mobileMenu() {
+    hamburger.classList.toggle("active");
+    navLinksWrapper.classList.toggle("active");
+}
+
+///////////////////////////////////////
 // Scrolling to first section
 
 const btnScrollTo = document.querySelector('[data-scroll-to]');
@@ -35,7 +48,6 @@ btnScrollTo.addEventListener('click', function () {
 // Navigation
 
 // Scrolling with event delegation
-const navLinksWrapper = document.querySelector('[data-nav-links]');
 
 navLinksWrapper.addEventListener('click', function (e) {
   e.preventDefault();
