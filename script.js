@@ -1,6 +1,19 @@
 'use strict';
 
 ///////////////////////////////////////
+// Global selectors
+
+const nav = document.querySelector('.nav');
+const header = document.querySelector('.header');
+const navHeight = nav.getBoundingClientRect().height;
+const hamburger = document.querySelector('[data-nav-hamburguer]');
+const navLinksWrapper = document.querySelector('[data-nav-links]');
+const footer = document.querySelector('.footer');
+const windowWidth = window.innerWidth;
+const mobileBreakpoint = 767;
+const tabletBreakpoint = 768;
+
+///////////////////////////////////////
 // Add copy year dynamically
 
 const copyYear = document.querySelector('[data-year]');
@@ -9,34 +22,29 @@ copyYear.textContent = new Date().getFullYear();
 ///////////////////////////////////////
 // Cookie Message
 
-const footer = document.querySelector('.footer');
-const message = document.createElement('div');
-message.classList.add('cookie-message');
-message.innerHTML =
+const cookieMessage = document.createElement('div');
+cookieMessage.classList.add('cookie-message');
+cookieMessage.innerHTML =
   'We use cookies for improved functionality and analytics. <button class="btn" data-close-cookie>Got it!</button>';
-footer.after(message);
+footer.after(cookieMessage);
 
 const closeCookie = document.querySelector('[data-close-cookie]');
 closeCookie.addEventListener('click', function () {
-  message.remove();
+  cookieMessage.remove();
 });
 
 ///////////////////////////////////////
 // Mobile Menu
 
-const hamburger = document.querySelector('[data-nav-hamburguer]');
-const navLinksWrapper = document.querySelector('[data-nav-links]');
-
-hamburger.addEventListener("click", mobileMenu);
+hamburger.addEventListener('click', mobileMenu);
 
 function mobileMenu() {
-    hamburger.classList.toggle("active");
-    navLinksWrapper.classList.toggle("active");
+  hamburger.classList.toggle('active');
+  navLinksWrapper.classList.toggle('active');
 }
 
 ///////////////////////////////////////
 // Scrolling to first section
-
 const btnScrollTo = document.querySelector('[data-scroll-to]');
 const section1 = document.querySelector('#section--1');
 
@@ -59,7 +67,6 @@ navLinksWrapper.addEventListener('click', function (e) {
 });
 
 // Menu fade animation
-const nav = document.querySelector('.nav');
 
 const handleHover = function (e) {
   if (e.target.classList.contains('nav__link')) {
@@ -82,9 +89,6 @@ nav.addEventListener('mouseout', handleHover.bind(1));
 
 /* The header element is being observed by the API since it becomes its "target" and as soon as it is no longer visible 
   on the viewport (root: 0, threshold: 0), which means not being intersectioned anymore, the sticky class is added to it */
-  
-const header = document.querySelector('.header');
-const navHeight = nav.getBoundingClientRect().height;
 
 const stickyNavCallback = function (entries) {
   /* Entries represents the threshold options.
@@ -98,12 +102,10 @@ const stickyNavCallback = function (entries) {
   }
 };
 
-const windowWidth = window.innerWidth;
-
 const stickyOptions = {
   root: null, //by using null, the viewport is defined as the root
   threshold: 0, //by using 0, the threshold is defined as soon as the header element is no longer visible
-  rootMargin: windowWidth > 768 ? `-${navHeight}px`: '300px', //that makes the sticky navigation appears before the section starts to prevent content overlapping
+  rootMargin: windowWidth > tabletBreakpoint ? `-${navHeight}px` : '300px', //that makes the sticky navigation appears before the section starts to prevent content overlapping
 };
 const headerObserver = new IntersectionObserver(
   stickyNavCallback,
@@ -191,6 +193,7 @@ tabContainer.addEventListener('click', function (e) {
 ///////////////////////////////////////
 // Slider
 const slider = function () {
+  const sliderContainer = document.querySelector('.slider');
   const slides = document.querySelectorAll('.slide');
   let currentSlide = 0;
   const maxSlide = slides.length;
@@ -283,6 +286,96 @@ const slider = function () {
     e.key === 'ArrowLeft' && prevSlide();
     e.key === 'ArrowRight' && nextSlide();
   });
+
+  const sliderTouchMobile = function() {
+      let isDragging = false,
+        startPos = 0,
+        currentTranslate = 0,
+        prevTranslate = 0,
+        animationID,
+        currentIndex = 0;
+  
+      slides.forEach((slide, index) => {
+        slide.addEventListener('dragstart', e => e.preventDefault());
+        // touch events
+        slide.addEventListener('touchstart', touchStart(index));
+        slide.addEventListener('touchend', touchEnd);
+        slide.addEventListener('touchmove', touchMove);
+        // mouse events
+        // slide.addEventListener('mousedown', touchStart(index));
+        // slide.addEventListener('mouseup', touchEnd);
+        // slide.addEventListener('mousemove', touchMove);
+        // slide.addEventListener('mouseleave', touchEnd);
+      });
+      // make responsive to viewport changes
+      window.addEventListener('resize', setPositionByIndex);
+      // prevent menu popup on long press
+      // window.oncontextmenu = function (event) {
+      //   event.preventDefault();
+      //   event.stopPropagation();
+      //   return false;
+      // };
+      function getPositionX(event) {
+        return event.type.includes('mouse')
+          ? event.pageX
+          : event.touches[0].clientX;
+      }
+      function touchStart(index) {
+        return function (event) {
+          currentIndex = index;
+          startPos = getPositionX(event);
+          isDragging = true;
+          animationID = requestAnimationFrame(animation);
+          sliderContainer.classList.add('grabbing');
+        };
+      }
+      function touchMove(event) {
+        if (isDragging) {
+          const currentPosition = getPositionX(event);
+          // console.log('Current Position', currentPosition);
+          // console.log('Event', event);
+          currentTranslate = prevTranslate + currentPosition - startPos;
+          // console.log('Current Translate', currentTranslate);
+        }
+      }
+      function touchEnd() {
+        cancelAnimationFrame(animationID);
+        isDragging = false;
+        const movedBy = currentTranslate - prevTranslate;
+        // if moved enough negative then snap to next slide if there is one
+        if (movedBy < -100 && currentIndex < slides.length - 1) {
+          currentIndex += 1;
+          goToSlide(currentIndex);
+        }
+        // if moved enough positive then snap to previous slide if there is one
+        if (movedBy > 100 && currentIndex > 0) {
+          currentIndex -= 1;
+          goToSlide(currentIndex);
+        }
+        setPositionByIndex();
+        sliderContainer.classList.remove('grabbing');
+      }
+      function animation() {
+        // setSliderPosition();
+        if (isDragging) requestAnimationFrame(animation);
+      }
+      function setPositionByIndex() {
+        currentTranslate = currentIndex * -window.innerWidth;
+        prevTranslate = currentTranslate;
+        // setSliderPosition();
+        // goToSlide(currentIndex);
+      }
+      // function setSliderPosition() {
+      //   sliderContainer.style.transform = `translateX(${currentTranslate}px)`;
+      // }
+  }
+
+  const addTouchSlider = function () {
+    if (windowWidth <= mobileBreakpoint) {
+      sliderTouchMobile()
+    }
+  }
+  addTouchSlider()
 };
 
 slider();

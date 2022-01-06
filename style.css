@@ -396,9 +396,13 @@ h4 {
   height: 50rem;
   margin: 0 auto;
   position: relative;
-
-  /* IN THE END */
   overflow: hidden;
+  transform: translateX(0);
+  transition: transform 0.3s ease-out;
+}
+
+.grabbing {
+  cursor: grabbing;
 }
 
 .slide {
@@ -409,7 +413,6 @@ h4 {
   display: flex;
   align-items: center;
   justify-content: center;
-
   /* THIS creates the animation! */
   transition: transform 1s;
 }
@@ -452,7 +455,7 @@ h4 {
 
 .dots {
   position: absolute;
-  bottom: 1%;
+  bottom: 1px;
   left: 50%;
   transform: translateX(-50%);
   display: flex;
@@ -740,10 +743,6 @@ h4 {
   .cookie-message {
     padding: 1rem;
   }
-
-  .dots {
-    display: none;
-  }
 }
 
 @media screen and (max-width: 1023px) {
@@ -861,6 +860,11 @@ h4 {
     justify-content: center;
   }
 
+  .slider {
+    cursor: grab;
+    user-select: none;
+  }
+
   .slider__btn {
     display: none;
   }
@@ -892,12 +896,16 @@ h4 {
   .header__title {
     align-content: baseline;
   }
+
+  .testimonial::before {
+    content: unset;
+  }
 }
 
 @media screen and (max-width: 500px) {
   .slider,
   .slide {
-    height: 75rem;
+    height: 65rem;
   }
 
   .btn.operations__tab {
