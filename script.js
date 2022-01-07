@@ -131,7 +131,12 @@ const sectionObserver = new IntersectionObserver(revealSection, {
 
 allSections.forEach(function (section) {
   sectionObserver.observe(section);
-  section.classList.add('section--hidden');
+  // Consider the page top position to hide the section in case the user
+  // refresh the page while in a botton one.
+  var topPosition = document.body.getBoundingClientRect().top;
+  if (topPosition > -100) {
+    section.classList.add('section--hidden');
+  }
 });
 
 ///////////////////////////////////////
@@ -208,6 +213,23 @@ const slider = function () {
     });
   };
 
+  const goToSlide = function (slide) {
+    slides.forEach((s, i) => {
+      s.style.transform = `translateX(${100 * (i - slide)}%)`;
+    });
+
+    activeDot(slide);
+
+    btnRight.classList.remove('disabled');
+    btnLeft.classList.remove('disabled');
+    if (slide === 0) {
+      btnLeft.classList.add('disabled');
+    }
+    if (slide === maxSlide - 1) {
+      btnRight.classList.add('disabled');
+    }
+  };
+
   const activeDot = function (slide) {
     //Remove all active dot styling first
     document
@@ -222,58 +244,26 @@ const slider = function () {
   dotContainer.addEventListener('click', function (e) {
     if (e.target.classList.contains('dots__dot')) {
       const slide = e.target.dataset.slide;
-      goToSlide(slide);
-      activeDot(slide);
+      goToSlide(Number(slide));
     }
   });
 
-  const goToSlide = function (slide) {
-    slides.forEach((s, i) => {
-      s.style.transform = `translateX(${100 * (i - slide)}%)`;
-
-      if (slide === maxSlide - 1) {
-        btnRight.classList.add('disabled');
-      }
-
-      if (slide === 0) {
-        btnLeft.classList.add('disabled');
-      }
-    });
-  };
-
   //Next slide
   const nextSlide = function () {
-    if (currentSlide === maxSlide - 1) {
-      btnRight.classList.add('disabled');
-      btnLeft.classList.remove('disabled');
-    } else {
-      btnRight.classList.remove('disabled');
-      btnLeft.classList.remove('disabled');
-      currentSlide++;
-    }
+    currentSlide++;
     goToSlide(currentSlide);
-    activeDot(currentSlide);
   };
 
   // Previous slide
   const prevSlide = function () {
-    if (currentSlide === 0) {
-      btnLeft.classList.add('disabled');
-      btnRight.classList.remove('disabled');
-    } else {
-      btnLeft.classList.remove('disabled');
-      btnRight.classList.remove('disabled');
-      currentSlide--;
-    }
+    currentSlide--;
     goToSlide(currentSlide);
-    activeDot(currentSlide);
   };
 
   //Initiate always on slide 0
   const initSlider = function () {
-    goToSlide(0);
     createDots();
-    activeDot(0);
+    goToSlide(0);
   };
 
   initSlider();
@@ -287,95 +277,78 @@ const slider = function () {
     e.key === 'ArrowRight' && nextSlide();
   });
 
-  const sliderTouchMobile = function() {
-      let isDragging = false,
-        startPos = 0,
-        currentTranslate = 0,
-        prevTranslate = 0,
-        animationID,
-        currentIndex = 0;
-  
-      slides.forEach((slide, index) => {
-        slide.addEventListener('dragstart', e => e.preventDefault());
-        // touch events
-        slide.addEventListener('touchstart', touchStart(index));
-        slide.addEventListener('touchend', touchEnd);
-        slide.addEventListener('touchmove', touchMove);
-        // mouse events
-        // slide.addEventListener('mousedown', touchStart(index));
-        // slide.addEventListener('mouseup', touchEnd);
-        // slide.addEventListener('mousemove', touchMove);
-        // slide.addEventListener('mouseleave', touchEnd);
-      });
-      // make responsive to viewport changes
-      window.addEventListener('resize', setPositionByIndex);
-      // prevent menu popup on long press
-      // window.oncontextmenu = function (event) {
-      //   event.preventDefault();
-      //   event.stopPropagation();
-      //   return false;
-      // };
-      function getPositionX(event) {
-        return event.type.includes('mouse')
-          ? event.pageX
-          : event.touches[0].clientX;
-      }
-      function touchStart(index) {
-        return function (event) {
-          currentIndex = index;
-          startPos = getPositionX(event);
-          isDragging = true;
-          animationID = requestAnimationFrame(animation);
-          sliderContainer.classList.add('grabbing');
-        };
-      }
-      function touchMove(event) {
-        if (isDragging) {
-          const currentPosition = getPositionX(event);
-          // console.log('Current Position', currentPosition);
-          // console.log('Event', event);
-          currentTranslate = prevTranslate + currentPosition - startPos;
-          // console.log('Current Translate', currentTranslate);
-        }
-      }
-      function touchEnd() {
-        cancelAnimationFrame(animationID);
-        isDragging = false;
-        const movedBy = currentTranslate - prevTranslate;
-        // if moved enough negative then snap to next slide if there is one
-        if (movedBy < -100 && currentIndex < slides.length - 1) {
-          currentIndex += 1;
-          goToSlide(currentIndex);
-        }
-        // if moved enough positive then snap to previous slide if there is one
-        if (movedBy > 100 && currentIndex > 0) {
-          currentIndex -= 1;
-          goToSlide(currentIndex);
-        }
-        setPositionByIndex();
-        sliderContainer.classList.remove('grabbing');
-      }
-      function animation() {
-        // setSliderPosition();
-        if (isDragging) requestAnimationFrame(animation);
-      }
-      function setPositionByIndex() {
-        currentTranslate = currentIndex * -window.innerWidth;
-        prevTranslate = currentTranslate;
-        // setSliderPosition();
-        // goToSlide(currentIndex);
-      }
-      // function setSliderPosition() {
-      //   sliderContainer.style.transform = `translateX(${currentTranslate}px)`;
-      // }
-  }
+  const sliderTouch = function () {
+    let isDragging = false,
+      startPos = 0,
+      currentTranslate = 0,
+      prevTranslate = 0,
+      currentIndex = 0;
 
-  const addTouchSlider = function () {
-    if (windowWidth <= mobileBreakpoint) {
-      sliderTouchMobile()
+    slides.forEach((slide, index) => {
+      slide.addEventListener('dragstart', e => e.preventDefault());
+      // touch events
+      slide.addEventListener('touchstart', touchStart(index));
+      slide.addEventListener('touchend', touchEnd);
+      slide.addEventListener('touchmove', touchMove);
+      // mouse events
+      slide.addEventListener('mousedown', touchStart(index));
+      slide.addEventListener('mouseup', touchEnd);
+      slide.addEventListener('mousemove', touchMove);
+      slide.addEventListener('mouseleave', touchEnd);
+    });
+
+    // make responsive to viewport changes
+    window.addEventListener('resize', setPositionByIndex);
+
+    // prevent menu popup on long press
+    window.oncontextmenu = function (event) {
+      event.preventDefault();
+      event.stopPropagation();
+      return false;
+    };
+
+    function getPositionX(event) {
+      return event.type.includes('mouse')
+        ? event.pageX
+        : event.touches[0].clientX;
     }
-  }
-  addTouchSlider()
+    function touchStart(index) {
+      return function (event) {
+        currentIndex = index;
+        startPos = getPositionX(event);
+        isDragging = true;
+        sliderContainer.classList.add('grabbing');
+      };
+    }
+    function touchMove(event) {
+      if (isDragging) {
+        const currentPosition = getPositionX(event);
+        currentTranslate = prevTranslate + currentPosition - startPos;
+      }
+    }
+    function touchEnd() {
+      isDragging = false;
+      const movedBy = currentTranslate - prevTranslate;
+      // if moved enough negative then snap to next slide if there is one
+      if (movedBy < -100 && currentIndex < slides.length - 1) {
+        currentIndex++;
+        goToSlide(currentIndex);
+      }
+
+      // if moved enough positive then snap to previous slide if there is one
+      if (movedBy > 100 && currentIndex > 0) {
+        currentIndex--;
+        goToSlide(currentIndex);
+      }
+      setPositionByIndex();
+      sliderContainer.classList.remove('grabbing');
+    }
+    function setPositionByIndex() {
+      currentTranslate = currentIndex * -window.innerWidth;
+      prevTranslate = currentTranslate;
+    }
+  };
+  sliderTouch();
 };
 
 slider();

@@ -399,6 +399,8 @@ h4 {
   overflow: hidden;
   transform: translateX(0);
   transition: transform 0.3s ease-out;
+  cursor: grab;
+  user-select: none;
 }
 
 .grabbing {
@@ -858,11 +860,6 @@ h4 {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-  }
-
-  .slider {
-    cursor: grab;
-    user-select: none;
   }
 
   .slider__btn {
