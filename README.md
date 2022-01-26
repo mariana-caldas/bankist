@@ -13,4 +13,4 @@ Landing page template with the following functionalities built in vanilla JavaSc
 
 This is been built as a practice of JS advanced DOM manipulations.
 
-Check out [the project](https://marianasouza.github.io/bankist/).
+Check out [the project](https://mariana-caldas.github.io/bankist/).
